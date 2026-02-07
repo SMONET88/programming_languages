@@ -29,7 +29,6 @@ public class Expression {
                 this.exprs.add(new Expression(input));
             } else {
                 this.exprs.add(new Expression(input));
-                System.out.println("BINARY operator found");
                 if (input.lookAhead().getType() == Token.Type.BINARY_OP) {
                     this.op = input.next();
                     this.exprs.add(new Expression(input));
@@ -86,7 +85,6 @@ public class Expression {
         } else if (this.op.getType() == Token.Type.UNARY_OP) {
             DataValue rhs = this.exprs.get(0).evaluate();
             if (this.op.toString().equals("!")) {
-                System.out.println("UHERE " + this.op);
                 if (rhs.getType() == DataValue.Type.BOOLEAN) {
                     boolean b2 = ((Boolean) (rhs.getValue()));
                     return new BooleanValue(!b2);
@@ -111,6 +109,11 @@ public class Expression {
                 } else if (op.toString().equals("<")) {
                     return new BooleanValue(lhs.compareTo(rhs) < 0);
                 } else if (this.op.toString().equals("&")) {
+                    if (rhs.getType() != DataValue.Type.BOOLEAN) {
+                        throw new Exception(
+                            "ILLEGAL TYPE: Must have boolean type with & and |"
+                        );
+                    }
                     if (rhs.getType() == DataValue.Type.BOOLEAN) {
                         boolean b2 = ((Boolean) (rhs.getValue()));
                         if (b2 == true) {
@@ -133,41 +136,42 @@ public class Expression {
                         } else {
                             boolCheck.add(false);
                         }
-                        System.out.println("boolCheck: " + boolCheck);
-                        if (boolCheck.contains(true)) {
-                            return new BooleanValue(true);
-                        } else {
-                            return new BooleanValue(false);
-                        }
-                    } else if (lhs.getType() == DataValue.Type.STRING) {
-                        String str1 = (String) lhs.getValue();
-                        String str2 = (String) rhs.getValue();
+                    }
+                    System.out.println("boolCheck: " + boolCheck);
+                    if (boolCheck.contains(true)) {
+                        return new BooleanValue(true);
+                    } else {
+                        return new BooleanValue(false);
+                    }
+                } else if (lhs.getType() == DataValue.Type.STRING) {
+                    String str1 = (String) lhs.getValue();
+                    String str2 = (String) rhs.getValue();
 
-                        if (op.toString().equals("+")) {
-                            return new StringValue(str1 + str2);
-                        }
-                    } else if (lhs.getType() == DataValue.Type.INTEGER) {
-                        int num1 = ((Integer) (lhs.getValue()));
-                        int num2 = ((Integer) (rhs.getValue()));
+                    if (op.toString().equals("+")) {
+                        return new StringValue(str1 + str2);
+                    }
+                } else if (lhs.getType() == DataValue.Type.INTEGER) {
+                    int num1 = ((Integer) (lhs.getValue()));
+                    int num2 = ((Integer) (rhs.getValue()));
 
-                        if (op.toString().equals("+")) {
-                            return new IntegerValue(num1 + num2);
-                        } else if (op.toString().equals("*")) {
-                            return new IntegerValue(num1 * num2);
-                        } else if (op.toString().equals("/")) {
-                            return new IntegerValue(num1 / num2);
-                        } else if (op.toString().equals("%")) {
-                            return new IntegerValue(num1 % num2);
-                        } else if (op.toString().equals("^")) {
-                            return new IntegerValue((int) Math.pow(num1, num2));
-                        }
+                    if (op.toString().equals("+")) {
+                        return new IntegerValue(num1 + num2);
+                    } else if (op.toString().equals("*")) {
+                        return new IntegerValue(num1 * num2);
+                    } else if (op.toString().equals("/")) {
+                        return new IntegerValue(num1 / num2);
+                    } else if (op.toString().equals("%")) {
+                        return new IntegerValue(num1 % num2);
+                    } else if (op.toString().equals("^")) {
+                        return new IntegerValue((int) Math.pow(num1, num2));
                     }
                 }
-                throw new Exception(
-                    "RUNTIME ERROR: Type mismatch in binary expression"
-                );
             }
+            throw new Exception(
+                "RUNTIME ERROR: Type mismatch in binary expression"
+            );
         }
+
         return null;
     }
 
