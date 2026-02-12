@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Derived class that represents an expression in the SILLY language.
@@ -120,8 +121,9 @@ public class Expression {
                         );
                     }
                     if (rhs.getType() == DataValue.Type.BOOLEAN) {
-                        boolean bool = ((Boolean) (rhs.getValue()));
-                        if (bool == true) {
+                        boolean bool1 = ((Boolean) (rhs.getValue()));
+                        boolean bool2 = ((Boolean) (lhs.getValue()));
+                        if (bool1 == true && bool2 == true) {
                             boolCheck.add(true);
                         } else {
                             boolCheck.add(false);
@@ -135,8 +137,9 @@ public class Expression {
                     }
                 } else if (this.op.toString().equals("|")) {
                     if (rhs.getType() == DataValue.Type.BOOLEAN) {
-                        boolean bool = ((Boolean) (rhs.getValue()));
-                        if (bool == true) {
+                        boolean bool1 = ((Boolean) (rhs.getValue()));
+                        boolean bool2 = ((Boolean) (lhs.getValue()));
+                        if (bool1 == true || bool2 == true) {
                             boolCheck.add(true);
                         } else {
                             boolCheck.add(false);
@@ -170,6 +173,25 @@ public class Expression {
                     } else if (op.toString().equals("^")) {
                         return new IntegerValue((int) Math.pow(num1, num2));
                     }
+                } else if (lhs.getType() == DataValue.Type.LIST) {
+                    ListValue str1 = (ListValue) lhs;
+                    ListValue str2 = (ListValue) rhs;
+
+                    @SuppressWarnings("unchecked")
+                    ArrayList<DataValue> result1 = (ArrayList<
+                        DataValue
+                    >) str1.getValue();
+                    @SuppressWarnings("unchecked")
+                    ArrayList<DataValue> result2 = (ArrayList<
+                        DataValue
+                    >) str2.getValue();
+
+                    ArrayList<DataValue> list = new ArrayList<>();
+                    list.addAll(result1);
+                    list.addAll(result2);
+                    ListValue combinedList = new ListValue(list);
+
+                    System.out.println("here sam: " + combinedList);
                 }
             }
             throw new Exception(
