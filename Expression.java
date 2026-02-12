@@ -115,8 +115,9 @@ public class Expression {
                         );
                     }
                     if (rhs.getType() == DataValue.Type.BOOLEAN) {
-                        boolean b2 = ((Boolean) (rhs.getValue()));
-                        if (b2 == true) {
+                        boolean bool1 = ((Boolean) (rhs.getValue()));
+                        boolean bool2 = ((Boolean) (lhs.getValue()));
+                        if (bool1 == true && bool2 == true) {
                             boolCheck.add(true);
                         } else {
                             boolCheck.add(false);
@@ -130,8 +131,9 @@ public class Expression {
                     }
                 } else if (this.op.toString().equals("|")) {
                     if (rhs.getType() == DataValue.Type.BOOLEAN) {
-                        boolean b2 = ((Boolean) (rhs.getValue()));
-                        if (b2 == true) {
+                        boolean bool1 = ((Boolean) (rhs.getValue()));
+                        boolean bool2 = ((Boolean) (lhs.getValue()));
+                        if (bool1 == true || bool2 == true) {
                             boolCheck.add(true);
                         } else {
                             boolCheck.add(false);
