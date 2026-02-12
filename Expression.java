@@ -7,10 +7,6 @@ import java.util.List;
  *   @version 1/20/26
  */
 
-//  The Boolean operator '!' (not) is currently implemented, but the '&' (and) and '|' (or) operators are not.
-// Modify the evaluate method of the Expression class so that these two operators are defined for Boolean values.
-// Note: if these operators are applied to non-Boolean values, your code should throw an exception with a meaningful error message.
-
 public class Expression {
 
     private Token tok; // used for simple expressions (no operators)
@@ -89,6 +85,15 @@ public class Expression {
                 if (rhs.getType() == DataValue.Type.BOOLEAN) {
                     boolean b2 = ((Boolean) (rhs.getValue()));
                     return new BooleanValue(!b2);
+                }
+            } else if (this.op.toString().equals("#")) {
+                if (rhs.getType() == DataValue.Type.STRING) {
+                    String strLength = ((String) (rhs.getValue()));
+                    return new IntegerValue(strLength.length());
+                } else if (rhs.getType() == DataValue.Type.LIST) {
+                    @SuppressWarnings("unchecked")
+                    ArrayList<DataValue> items = (ArrayList<DataValue>) rhs.getValue();
+                    return new IntegerValue(items.size());
                 }
             }
 
