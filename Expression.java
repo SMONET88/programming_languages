@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Derived class that represents an expression in the SILLY language.
@@ -92,7 +91,9 @@ public class Expression {
                     return new IntegerValue(strLength.length());
                 } else if (rhs.getType() == DataValue.Type.LIST) {
                     @SuppressWarnings("unchecked")
-                    ArrayList<DataValue> items = (ArrayList<DataValue>) rhs.getValue();
+                    ArrayList<DataValue> items = (ArrayList<
+                        DataValue
+                    >) rhs.getValue();
                     return new IntegerValue(items.size());
                 }
             }
@@ -129,7 +130,6 @@ public class Expression {
                             boolCheck.add(false);
                         }
                     }
-                    System.out.println("boolCheck: " + boolCheck);
                     if (boolCheck.contains(false)) {
                         return new BooleanValue(false);
                     } else {
@@ -145,7 +145,6 @@ public class Expression {
                             boolCheck.add(false);
                         }
                     }
-                    System.out.println("boolCheck: " + boolCheck);
                     if (boolCheck.contains(true)) {
                         return new BooleanValue(true);
                     } else {
@@ -189,11 +188,43 @@ public class Expression {
                     ArrayList<DataValue> list = new ArrayList<>();
                     list.addAll(result1);
                     list.addAll(result2);
-                    ListValue combinedList = new ListValue(list);
 
-                    System.out.println("here sam: " + combinedList);
+                    return new ListValue(list);
+                }
+            } else if (
+                lhs.getType() != rhs.getType() && op.toString().equals("@")
+            ) {
+                if (
+                    lhs.getType() != DataValue.Type.STRING &&
+                    lhs.getType() != DataValue.Type.LIST &&
+                    rhs.getType() != DataValue.Type.INTEGER
+                ) {
+                    throw new Exception(
+                        "RUNTIME ERROR: Type mismatch, only a string/list and integer can be used with @ operator"
+                    );
+                }
+                if (
+                    op.toString().equals("@") &&
+                    lhs.getType() == DataValue.Type.STRING
+                ) {
+                    String word = (String) lhs.getValue();
+                    int index = (int) rhs.getValue();
+                    char character = word.charAt(index);
+                    return new StringValue(String.valueOf(character));
+                } else if (
+                    op.toString().equals("@") &&
+                    lhs.getType() == DataValue.Type.LIST
+                ) {
+                    @SuppressWarnings("unchecked")
+                    ArrayList<DataValue> listValues = (ArrayList<
+                        DataValue
+                    >) lhs.getValue();
+                    int index = (int) rhs.getValue();
+
+                    return listValues.get(index);
                 }
             }
+
             throw new Exception(
                 "RUNTIME ERROR: Type mismatch in binary expression"
             );
